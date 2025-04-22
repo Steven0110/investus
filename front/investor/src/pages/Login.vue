@@ -23,6 +23,8 @@
 									v-on:keyup.enter="prepareLogin",
 									dense,
 									required)
+								v-alert.text-center.mb-4(color="primary", outlined)
+									|This is a demonstration portfolio site. All functionality is simulated and limited, no backend services are connected. Enter any email and password to access
 								v-alert.text-center(color="warning", transition="scale-transition", v-show="preGetError")
 									|{{ preGetError }}
 								v-btn(
