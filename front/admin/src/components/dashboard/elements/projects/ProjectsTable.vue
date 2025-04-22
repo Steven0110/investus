@@ -2,9 +2,9 @@
 	v-data-table.projects-table(
 		:headers="headers",
 		:items="projects",
-		loading-text="Cargando proyectos...",
-		no-result-text="Sin proyectos",
-		no-data-text="Sin proyectos",
+		loading-text="Loading projects...",
+		no-result-text="No projects",
+		no-data-text="No projects",
 		:loading="loading")
 
 		//template(v-slot:item.createdAt="{ item }")
@@ -28,19 +28,19 @@
 						v-icon.mr-3(color="primary", v-bind="attrs", v-on="on", @click="")
 							|mdi-currency-usd
 					span
-						|Estado financiero
+						|Financial status
 				v-tooltip(bottom, max-width="300px", v-if="item.status == 'waiting' || item.status == 'published'")
 					template(v-slot:activator="{ on, attrs }")
-						v-icon.mr-3(color="primary", v-bind="attrs", v-on="on", @click="view(item._id)")
+						v-icon.mr-3(color="primary", v-bind="attrs", v-on="on")
 							|mdi-eye
 					span
-						|Ver proyecto
+						|View project
 				v-tooltip(bottom, max-width="300px", v-if="item.status == 'revision'")
 					template(v-slot:activator="{ on, attrs }")
 						v-icon.mr-3(color="primary", v-bind="attrs", v-on="on", @click="review(item._id)")
 							|mdi-file
 					span
-						|Revisar
+						|Review
 </template>
 
 <script>
@@ -50,21 +50,21 @@
 			statusText: function(value) {
 				switch(value){
 					case "waiting":
-						return "Pendiente"
+						return "Pending"
 					case "rejected":
-						return "Rechazada"
+						return "Rejected"
 					case "published":
-						return "Publicada"
+						return "Published"
 					case "finished":
-						return "Finalizada"
+						return "Finished"
 					case "revision":
-						return "Pendiente"
+						return "Pending"
 					default:
-						return "Sin definir"
+						return "Undefined"
 				}
 			},
 			typeText: function(value) {
-				return value == "debt" ? "Deuda" : "Copropiedad"
+				return value == "debt" ? "Debt" : "Co-ownership"
 			},
 			currency: function( value ) {
 				return "$" + parseFloat(value).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

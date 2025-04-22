@@ -7,15 +7,15 @@
 						.login-panel
 							img.login-logo(src="/assets/images/logo.png")
 							p.dashboard-title
-								|Panel de administración
+								|Administration Panel
 							p.simple-message
-								|Ingresa tu correo electrónico.
+								|Enter your email.
 							v-form(ref="preLoginForm", onSubmit="return false;")
 								v-text-field(
 									append-icon="mdi-email",
 									name="email",
 									v-model="login.username",
-									label="Correo electrónico",
+									label="Email",
 									background-color="transparent",
 									color="primary",
 									:rules="form.validations.email",
@@ -23,6 +23,8 @@
 									v-on:keyup.enter="prepareLogin",
 									dense,
 									required)
+								v-alert.text-center.mb-4(color="primary", outlined)
+									|This is a demonstration portfolio site. All functionality is simulated and limited, no backend services are connected. Enter any email and password to access
 								v-alert.text-center(color="warning", transition="scale-transition", v-show="preGetError")
 									|{{ preGetError }}
 								v-btn(
@@ -32,15 +34,15 @@
 									block,
 									x-large,
 									@click="prepareLogin")
-									|Continuar
+									|Continue
 
 							.action-buttons
 								.forgot-password
 									router-link(:to="{path: '/forgot'}")
-										|¿Olvidaste tu contraseña?&nbsp;&nbsp;&nbsp;
+										|Forgot your password?&nbsp;&nbsp;&nbsp;
 								.blocked-account
 									router-link(:to="{path: '/unlock'}")
-										|¿Tu cuenta está bloqueada?
+										|Is your account locked?
 							copyright
 
 			contact
@@ -56,19 +58,19 @@
 
 					v-form(ref="loginForm", onSubmit="return false;")
 						.instructions
-							|Estimado administrador, por favor verifique la siguiente información previo a ingresar su contraseña de acceso:
+							|Dear administrator, please verify the following information before entering your access password:
 						.secret-image(v-if="pre.secretImage")
 							img(:src="'/assets/images/secret/' + pre.secretImage")
 						.obfuscated-name-container
 							.title
-								|Nombre:
+								|Name:
 							.obfuscated-name
 								|{{ pre.name }}
 						v-text-field(
 							ref="password",
 							append-icon="mdi-lock",
 							v-model="login.password",
-							label="Contraseña",
+							label="Password",
 							:rules="form.validations.password",
 							outlined,
 							dense,
@@ -97,7 +99,7 @@
 							dark,
 							x-large,
 							@click="submitLogin")
-							|Iniciar sesión
+							|Log in
 				v-card-actions
 </template>
 
@@ -129,11 +131,11 @@
 				form: {
 					validations: {
 						email: [
-				        	v => !!v || 'El email es requerido',
-				        	v => /.+@.+\..+/.test(v) || 'El email no es válido',
+				        	v => !!v || 'Email is required',
+				        	v => /.+@.+\..+/.test(v) || 'Email is invalid',
 				      	],
 				      	password: [
-				        	v => !!v || 'La contraseña es requerida',
+				        	v => !!v || 'Password is required',
 				      	]
 					}
 				}
@@ -150,30 +152,23 @@
 				if( this.$refs.preLoginForm.validate() ){
 
 					this.status.preparing = true
-					/*	Obtiene imagen secreta e iniciales del usuario */
-					this.$auth.get("preget-user/" + this.login.username)
-					.then(result => {
+					
+					// Mock implementation for demo purposes
+					setTimeout(() => {
 						this.extendLogin = true
-
-						this.pre = result.data.user
+						
+						// Set mock user data
+						this.pre = {
+							name: "Demo User",
+							secretImage: "2556363yrhfj6869uojk088jhg.jpg"
+						}
+						
 						setTimeout(() =>  {
 							this.$refs.password.focus()
 						}, 200)
-					})
-					.catch( err => {
-						if( err.response ){
-							if( err.response.status == 404 ){
-								this.preGetError = `El usuario ${this.login.username} no se encuentra registrado.`
-							}else{
-								this.preGetError = "Error al iniciar sesión. Por favor vuelve a intentarlo."
-								this.$sentry.captureException( err )
-							}
-						}else{
-							this.preGetError = "Error al iniciar sesión. Por favor vuelve a intentarlo."
-							this.$sentry.captureException( err )
-						}
-					})
-					.finally( () => this.status.preparing = false)
+						
+						this.status.preparing = false
+					}, 800)
 				}
 			},
 			submitLogin: function(){
@@ -182,63 +177,36 @@
 					this.error = ""
 					this.message = ""
 
-					let body = {
-						"username": this.$sanitizer.sanitizeXSS(this.login.username),
-						"password": this.$sanitizer.sanitizeXSS(this.login.password)
-					}
-
-					if( this.login.otp )
-						body.otp = this.login.otp.replace(/\s/g, "")
-					
-					let resource = "login"
-
-					this.$auth.post(resource, body)
-					.then( response => {
+					// Mock implementation for demo purposes
+					setTimeout(() => {
 						this.status.loading = false
-						let user = response.data.user
-						if( user.name ){
-							this.$store.commit("setUser", user)
-							this.$store.commit("setSessionActive", true)
 						
-							this.$swal({
-								title: `Bienvenido ${user.name}.`,
-								text: "En breve serás redireccionado a tu dashboard",
-								type: "success",
-								showConfirmButton: false,
-								timer: 3000,
-								onClose: () => {
-									this.$router.push({path: "/dashboard/"})
-								}
-							})
-						}else{
-							/*	Algo ocurrió al iniciar sesión 	*/
-							this.$swal("No se pudo iniciar sesión", "Por favor, espera un momento y vuelve a intentarlo", "warning")
+						// Create mock user data
+						const user = {
+							name: "Demo User",
+							email: this.login.username,
+							role: "investor",
+							permissions: ["dashboard.access", "portfolio.view"]
 						}
-					})
-					.catch( error => {
-						this.status.loading = false
-						if( error.response.status == 401 )
-							this.error = "Usuario y contraseña incorrectos"
-						else if( error.response.status == 409 )
-							this.error = "Código de verificación inválido"
-						else if( error.response.status == 402 )
-							this.error = "La cuenta ha sido bloqueada tras 3 intentos de inicio de sesión fallidos"
-						else if( error.response.status == 410 )
-							this.error = "La cuenta se encuentra bloqueada"
-						else if( error.response.status == 408 )
-							this.error = "Ya hay una sesión activa en otro equipo. Si acabas de cerrarla, por favor espera 5 minutos y vuelve a intentarlo."
-						else if( error.response.status == 406 ){
-							this.message = "Por favor ingresa el código que aparece en Google Authenticator:"
-							this.status.otp = true
-
-							this.$nextTick(() => {
-								this.$refs["otp-input"].focus()
-							})
-						}else
-							this.error = "Error al procesar la solicitud."
-					})
+						
+						// Set user in store
+						this.$store.commit("setUser", user)
+						this.$store.commit("setSessionActive", true)
+						
+						this.$swal({
+							title: `Welcome ${user.name}`,
+							text: "You will be redirected to your dashboard",
+							type: "success",
+							showConfirmButton: false,
+							timer: 3000,
+							onClose: () => {
+								this.$router.push({path: "/dashboard/"})
+							}
+						})
+					}, 1500)
 				}
 			}
+
 		},
 		components: {
 			Copyright,

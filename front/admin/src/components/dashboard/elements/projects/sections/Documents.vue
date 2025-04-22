@@ -8,27 +8,29 @@
 						complete-icon="mdi-check",
 						v-if="viabilidadDocs.length > 0",
 						edit-icon="mdi-check")
-						|Viabilidad Legal o Jurídica
+						|Legal Viability
 					v-divider
 					v-stepper-step(
 						v-if="evaluacionDocs.length > 0",
 						editable,
 						step="2")
-						|Evaluación
+						|Evaluation
 					v-divider
 					v-stepper-step(
 						v-if="$store.getters.currentProject.stage == 'montos'",
 						editable,
 						step="3")
-						|Garantía Inmobiliaria
+						|Real Estate Guarantee
 				v-stepper-items
 					v-stepper-content.elevation-0(step="1")
 						.step-header
 							.description
-								|Documentos solicitados por las Disposiciones de carácter general a las que se refiere el artículo 58 de la LRITF.
+								|Documents required by the General Provisions regarding Article 58 of the LRITF.
 						.step-subcontent
 							v-row.documents(v-if="$store.getters.currentProject.documents.length > 0")
 								v-col(cols="12", md="6", lg="4", xl="3", v-for="(doc, index) in viabilidadDocs", :key="doc.type")
+									span
+										|{{ doc.name }}
 									checker(
 										:doc="doc",
 										:_id="$store.getters.currentProject._id",
@@ -42,15 +44,15 @@
 									:disabled="!isViabilidadReady",
 									:loading="status.loading",
 									@click="validate")
-									|Aprobar documentos
+									|Approve documents
 								v-spacer
 
 					v-stepper-content.elevation-0(step="2")
 						.step-header
 							.description
-								|Documentos solicitados por las Disposiciones de Carácter General Aplicables a las Instituciones de Tecnología Financiera.
+								|Documents required by the General Provisions Applicable to Financial Technology Institutions.
 						.step-subcontent
-							v-row.documents(v-if="$store.getters.currentProject.documents.length > 0")
+							v-row.documents()
 								v-col(cols="12", md="6", lg="4", xl="3", v-for="(doc, index) in evaluacionDocs", :key="doc.type")
 									checker(
 										:doc="doc",
@@ -64,7 +66,7 @@
 							v-row
 								v-col(cols="12")
 									h3.text-center
-										|Líder de proyecto y personal de la primera línea jerárquica:
+										|Project leader and first-line staff:
 							transition-group(name="slide-x-transition", class="row" tag="div", mode="out-in")
 								v-col(cols="12", sm="6", md="4", xl="3", v-for="worker in $store.getters.currentProject.workers", :key="worker.name")
 									worker-card(:worker="worker")
@@ -73,22 +75,24 @@
 								v-spacer
 								v-btn.mt-2(
 									color="primary",
+									size="x-large",
 									:disabled="!isEvaluacionReady",
 									:loading="status.loading",
+									:style="{height: '55px'}",
 									@click="validate")
-									|Aprobar documentos e información
+									|Approve documents and information
 								v-spacer
 
 					v-stepper-content.elevation-0(step="3")
 						.step-header
 							.description
-								|Montos de financiamiento del proyecto y garantía inmobiliaria.
+								|Project financing amounts and real estate guarantee.
 						financiamiento
 
 						v-row
 							v-spacer
 							v-btn(color="primary", @click="calculateRisk")
-								|Calcular nivel de riesgo del proyecto
+								|Calculate project risk level
 								v-icon(right)
 									|mdi-gauge
 							v-spacer
@@ -102,24 +106,24 @@
 													tr
 														th
 															h3
-																|Rubro
+																|Category
 														th
 															h3
-																|Calificación
+																|Rating
 												tbody
 													tr
 														td
-															|Viabilidad legal
+															|Legal viability
 														td
 															|{{ rating.viabilidad | percentage }}
 													tr
 														td
-															|Evaluación cualitativa y cuantitativa
+															|Qualitative and quantitative evaluation
 														td
 															|{{ rating.evaluacion | percentage }}
 													tr
 														td
-															|Monto financiero y garantía inmobiliaria
+															|Financial amount and real estate guarantee
 														td
 															|{{ rating.montos | percentage }}
 													tr
@@ -134,9 +138,7 @@
 									v-card-actions
 										v-spacer
 										v-btn(color="primary", @click="")
-											|Aprobar proyecto
-											v-icon(right)
-												|mdi-check
+											|Approve project
 
 </template>
 
@@ -156,7 +158,105 @@
 				step: 1,
 				risk: null,
 				rating: null,
-				globalRate: 0
+				globalRate: 0,
+				// Mock documents for demo
+				mockDocuments: [
+					{
+						type: "legal_doc_1",
+						name: "Articles of Incorporation",
+						stage: "viabilidad",
+						processed: true,
+						valid: true,
+						rate: 8,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					},
+					{
+						type: "legal_doc_2",
+						name: "Property Title",
+						stage: "viabilidad",
+						processed: true,
+						valid: true,
+						rate: 9,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					},
+					{
+						type: "legal_doc_3",
+						name: "Land Use Permit",
+						stage: "viabilidad",
+						processed: true,
+						valid: true,
+						rate: 7,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					},
+					{
+						type: "financial_doc_1",
+						name: "Market Study",
+						stage: "evaluacion",
+						processed: true,
+						valid: true,
+						rate: 8,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					},
+					{
+						type: "financial_doc_2",
+						name: "Financial Projections",
+						stage: "evaluacion",
+						processed: true,
+						valid: true,
+						rate: 7,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					},
+					{
+						type: "financial_doc_3",
+						name: "Risk Assessment",
+						stage: "evaluacion",
+						processed: true,
+						valid: true,
+						rate: 6,
+						url: "#",
+						goal: {
+							amount: 2500000
+						}
+					}
+				],
+				mockWorkers: [
+					{
+						name: "John Smith",
+						position: "Project Manager",
+						experience: "15 years",
+						education: "MBA - Harvard Business School",
+						image: "/assets/images/project-default.png"
+					},
+					{
+						name: "Emily Johnson",
+						position: "Financial Director",
+						experience: "12 years",
+						education: "Master in Finance - Stanford",
+						image: "/assets/images/project-default.png"
+					},
+					{
+						name: "Michael Chen",
+						position: "Lead Architect",
+						experience: "20 years",
+						education: "Architecture - MIT",
+						image: "/assets/images/project-default.png"
+					}
+				]
 			}
 		},
 		methods: {
@@ -171,41 +271,38 @@
 
 				switch( this.stage ){
 					case "viabilidad":
-						text = "Una vez validados se le notificará al solicitante y se le habilitará la subida de documentos para la evaluación cuantitativa y cualitativa."
+						text = "Once validated, the requester will be notified and document upload for quantitative and qualitative evaluation will be enabled."
 						break
 					case "evaluacion":
-						text = "Una vez validados se le notificará al solicitante y se le habilitará el módulo de montos y garantía inmobiliaria."
+						text = "Once validated, the requester will be notified and the amounts and real estate guarantee module will be enabled."
 						break
 					default:
-						text = "Una vez validados se le notificará al solicitante y se le habilitará la subida de documentos para la evaluación cuantitativa y cualitativa."
+						text = "Once validated, the requester will be notified and document upload for quantitative and qualitative evaluation will be enabled."
 				}
 
 				this.$swal({
-					title: "¿Validar los documentos?",
+					title: "Validate documents?",
 					text: text,
 					type: "warning",
-					confirmButtonText: "Confirmar",
-					cancelButtonText: "Regresar",
+					confirmButtonText: "Confirm",
+					cancelButtonText: "Go back",
 					showCancelButton: true,
 					reverseButtons: true
 				}).then(result => {
 					if( result.value ){
 						this.status.loading = true
 
-						this.$projects.post(`validate/${this.$store.getters.currentProject._id}/${this.stage}`)
-						.then(result => {
-							this.renovateSession()
+						// Mock API call
+						setTimeout(() => {
+							this.status.loading = false
 							this.$router.push({path: "/dashboard/proyectos"})
 							
 							if(this.stage == "montos"){
-								this.$swal("¡Listo!", "El proyecto ha sido publicado exitosamente y está listo para ser fondeado", "success")
-							}else
-								this.$swal("¡Listo!", "Los documentos en esta etapa han sido aprobados", "success")
-						})
-						.catch( err => this.$report(err, {swal: true}) )
-						.finally( () => {
-							this.status.loading = false
-						})
+								this.$swal("Done!", "The project has been successfully published and is ready to be funded", "success")
+							} else {
+								this.$swal("Done!", "The documents in this stage have been approved", "success")
+							}
+						}, 1000)
 					}
 				})
 			},
@@ -285,13 +382,13 @@
 			viabilidadDocs: function() {
 				let documents = this.$store.getters.currentProject.documents || [] //array
 				let filtered = documents.filter(doc => doc.stage == 'viabilidad')
-
+				console.log(filtered)
 				return filtered
 			},
 			evaluacionDocs: function() {
 				let documents = this.$store.getters.currentProject.documents || []
 				let filtered = documents.filter(doc => doc.stage == 'evaluacion')
-				
+				console.log(filtered)
 				return filtered
 			},
 			montosDocs: function() {
@@ -320,7 +417,6 @@
 					string = "published"
 					this.step = 4
 				}
-				console.info( string )
 				return string
 			},
 			isReady: function() {
@@ -344,6 +440,37 @@
 			WorkerCard,
 			Financiamiento,
 			RiskLevel,
+		},
+		mounted() {
+			// Initialize mock data if no documents exist
+			//this.$store.commit("setCurrentProject", this.mockDocuments[0])
+			if (this.$store.getters.currentProject) {
+				// Add mock data to the project
+				const project = this.$store.getters.currentProject;
+				
+				if (!project.documents) {
+					project.documents = this.mockDocuments;
+				}
+				
+				if (!project.workers) {
+					project.workers = this.mockWorkers;
+				}
+				
+				if (!project.estates) {
+					project.estates = [
+						{ value: 3000000, location: "Downtown" },
+						{ value: 1500000, location: "Suburbs" }
+					];
+				}
+				
+				// Update the store
+				//this.$store.commit("setCurrentProject", project);
+				
+				// Initialize risk calculation after a short delay
+				setTimeout(() => {
+					this.calculateRisk();
+				}, 1500);
+			}
 		}
 	}
 </script>

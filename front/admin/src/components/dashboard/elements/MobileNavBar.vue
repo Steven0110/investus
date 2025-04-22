@@ -18,17 +18,17 @@
 							v-icon
 								|mdi-settings
 							v-list-item-title
-								|Perfil
+								|Profile
 						v-list-item(@click="$router.push({path: '/dashboard/autenticacion'})")
 							v-icon
 								|mdi-account
 							v-list-item-title
-								|Autenticación
+								|Authentication
 						v-list-item(@click="logout")
 							v-icon
 								|mdi-exit-to-app
 							v-list-item-title
-								|Cerrar sesión
+								|Log out
 </template>
 
 <script>
@@ -37,10 +37,10 @@
 			logout: function() {
 				
 				this.$swal({
-					title: "¿Estás seguro que deseas cerrar tu sesión?",
+					title: "Are you sure you want to log out?",
 					type: "warning",
-					confirmButtonText: "Sí, cerrar sesión.",
-					cancelButtonText: "No, regresar.",
+					confirmButtonText: "Yes, log out.",
+					cancelButtonText: "No, go back.",
 					showLoaderOnConfirm: true,
 					showCancelButton: true,
 					reverseButtons: true,
@@ -53,7 +53,7 @@
 					if(!result.dismiss){
 						this.$store.commit("setSessionActive", false)
 						this.$swal({
-							title: `Sesión cerrada exitosamente.`,
+							title: `Session closed successfully.`,
 							text: "",
 							type: "success",
 							showConfirmButton: false,

@@ -4,19 +4,19 @@
 			v-card-text
 				//Nombre
 				.profile-name
-					|Nombre
+					|Name
 				.profile-value
 					|{{ $store.getters.user.name }}
 
 				//Email
 				.profile-name
-					|Correo electrónico
+					|Email
 				.profile-value
 					|{{ $store.getters.user.username }}
 
 				//Email
 				.profile-name
-					|Rol
+					|Role
 				.profile-value
 					|{{ $store.getters.user.role }}
 </template>

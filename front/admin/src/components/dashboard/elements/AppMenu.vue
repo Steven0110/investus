@@ -16,14 +16,6 @@
 					
 					v-divider
 
-					v-list-item(link, exact, :to="{path: '/dashboard'}")
-						v-list-item-icon
-							v-icon
-								|mdi-home
-						v-list-item-content
-							v-list-item-title
-								|Inicio
-
 					v-list-item(link, exact, :to="{path: '/dashboard/proyectos'}")
 						v-list-item-icon
 							v-icon

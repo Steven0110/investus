@@ -1,17 +1,17 @@
 <template lang="pug">
 	.developers-subpanel
 		.subpanel-title.d-none.d-md-block
-			|Solicitantes
+			|Developers
 		.subpanel-description
-			|En esta sección podrás consultar y administrar a los solicitantes de la plataforma
+			|In this section you can view and manage the platform's project developers
 		.content
 			v-data-table.developers-table(
 				:headers="headers",
 				:items="developers",
-				loading-text="Cargando información...",
-				no-result-text="Sin solicitantes registrados",
-				:footer-props="{'items-per-page-text': 'Mostrar:'}"
-				no-data-text="Sin solicitantes registrados",
+				loading-text="Loading information...",
+				no-result-text="No registered requesters",
+				:footer-props="{'items-per-page-text': 'Show:'}"
+				no-data-text="No registered requesters",
 				:loading="status.loading")
 
 				template(v-slot:item.type="{ item }")
@@ -47,13 +47,13 @@
 								v-icon(color="primary", v-bind="attrs", v-on="on", @click="")
 									|mdi-account
 							span
-								|Revisar cuenta de usuario
+								|Review user account
 						v-tooltip(bottom, max-width="300px")
 							template(v-slot:activator="{ on, attrs }")
 								v-icon.ml-2(color="red darken-2", v-bind="attrs", v-on="on", @click="blockUser(item)")
 									|mdi-lock
 							span
-								|Bloquear cuenta de usuario
+								|Block user account
 
 		//create(v-model="status.show.create", @add="addCompany")
 		//edit(v-model="updateEdit", @update="updateUser")
@@ -63,7 +63,7 @@
 				v-btn(v-bind="attrs", text)
 					v-icon(color="white")
 						|mdi-check
-			|Cambio realizado exitosamente
+			|Change successfully made
 </template>
 
 <script>
@@ -75,13 +75,13 @@
 			return {
 				developers: [],
 				headers: [
-					{ text: "Nombre", value: "name" },
-					{ text: "Correo", value: "username" },
-					{ text: "Persona", value: "type", align: "center", },
-					{ text: "¿Activo?", value: "active", align: "center" },
-					{ text: "¿Verificado?", value: "verified", align: "center" },
-					{ text: "Documentos pendientes", value: "pendingDocuments", align: "center" },
-					{ text: "Acciones", value: "_id", align: "center", sortable: false },
+					{ text: "Name", value: "name" },
+					{ text: "Email", value: "username" },
+					{ text: "Person Type", value: "type", align: "center", },
+					{ text: "Active?", value: "active", align: "center" },
+					{ text: "Verified?", value: "verified", align: "center" },
+					{ text: "Pending Documents", value: "pendingDocuments", align: "center" },
+					{ text: "Actions", value: "_id", align: "center", sortable: false },
 				],
 				status: {
 					loading: false,
@@ -95,19 +95,101 @@
 		},
 		methods: {
 			init: function() {
-
-				if( !this.status.loading ){
+				if(!this.status.loading) {
 					this.status.loading = true
-
-					this.$developers.get("get")
-					.then(result => this.developers = result.data.developers)
-					.catch(err => {
-						this.$swal("Error", "Hubo un error al consultar a los usuarios, por favor vuelva a intentarlo.", "warning")
-						this.$report( err )
-					})
-					.finally(() => this.status.loading = false)
+					
+					// Mock data instead of API call
+					setTimeout(() => {
+						this.developers = [
+							{
+								_id: "dev1",
+								name: "ABC Development Corp",
+								username: "info@abcdev.com",
+								type: "moral",
+								active: true,
+								verified: true,
+								pendingDocuments: 0,
+								projectsSubmitted: 3,
+								projectsApproved: 2,
+								createdAt: new Date("2022-06-15")
+							},
+							{
+								_id: "dev2",
+								name: "Urban Builders LLC",
+								username: "projects@urbanbuilders.com",
+								type: "moral",
+								active: true,
+								verified: true,
+								pendingDocuments: 1,
+								projectsSubmitted: 5,
+								projectsApproved: 3,
+								createdAt: new Date("2022-09-10")
+							},
+							{
+								_id: "dev3",
+								name: "Robert Johnson",
+								username: "robert.j@example.com",
+								type: "fisica",
+								active: true,
+								verified: false,
+								pendingDocuments: 3,
+								projectsSubmitted: 1,
+								projectsApproved: 0,
+								createdAt: new Date("2023-02-22")
+							},
+							{
+								_id: "dev4",
+								name: "Premium Developers",
+								username: "info@premiumdev.com",
+								type: "moral",
+								active: true,
+								verified: true,
+								pendingDocuments: 0,
+								projectsSubmitted: 4,
+								projectsApproved: 4,
+								createdAt: new Date("2021-11-05")
+							},
+							{
+								_id: "dev5",
+								name: "Maria Rodriguez",
+								username: "maria.r@example.com",
+								type: "fisica",
+								active: false,
+								verified: false,
+								pendingDocuments: 5,
+								projectsSubmitted: 0,
+								projectsApproved: 0,
+								createdAt: new Date("2023-04-30")
+							},
+							{
+								_id: "dev6",
+								name: "Integrated Spaces",
+								username: "projects@integratedspaces.com",
+								type: "moral",
+								active: true,
+								verified: true,
+								pendingDocuments: 0,
+								projectsSubmitted: 6,
+								projectsApproved: 3,
+								createdAt: new Date("2022-08-18")
+							},
+							{
+								_id: "dev7",
+								name: "David Smith",
+								username: "david.s@example.com",
+								type: "fisica",
+								active: true,
+								verified: true,
+								pendingDocuments: 0,
+								projectsSubmitted: 2,
+								projectsApproved: 1,
+								createdAt: new Date("2022-12-12")
+							}
+						];
+						
+						this.status.loading = false;
+					}, 1000);
 				}
-
 			},
 			updateUser: function(user) {
 				let index = this.developers.map(c => c._id).indexOf(user._id)
@@ -116,31 +198,29 @@
 			},
 			blockUser: function(user) {
 				this.$swal({
-					title: `¿Seguro que deseas bloquear al usuario ${user.name}?`,
-					text: "Puedes deshacer esta acción posteriormente.",
+					title: `Are you sure you want to block user ${user.name}?`,
+					text: "You can undo this action later.",
 					type: "warning",
-					confirmButtonText: "Sí, bloquear",
-					cancelButtonText: "Cancelar",
+					confirmButtonText: "Yes, block",
+					cancelButtonText: "Cancel",
 					showCancelButton: true,
 					reverseButtons: true
 				})
 				.then(result => {
-					if( result.value ){
+					if(result.value) {
 						this.status.loading = true
-						this.$invoices.get(`block/${user._id}`)
-						.then(result => {
-							this.$swal("¡Listo!", `El usuario ${user.name} ha sido bloqueado exitosamente`, "success")
-						})
-						.catch(err => {
-							if( err.response && err.response.status ){
-								if( err.response.status == 404 ){
-									this.$swal("No encontrado", "El usuario no existe.", "error")
-								}else
-									this.$report( err, {swal: true} )
-							}else
-								this.$report( err, {swal: true} )
-						})
-						.finally(() => this.status.loading = false)
+						
+						// Mock API call
+						setTimeout(() => {
+							// Update user status in the array
+							const index = this.developers.findIndex(dev => dev._id === user._id);
+							if (index !== -1) {
+								this.developers[index].active = false;
+							}
+							
+							this.$swal("Done!", `User ${user.name} has been successfully blocked`, "success");
+							this.status.loading = false;
+						}, 1000);
 					}
 				})
 			}
@@ -152,7 +232,7 @@
 			this.init()
 		},
 		filters: {
-			persona: value => value == "fisica" ? "Física" : "Moral"
+			persona: value => value == "fisica" ? "Natural Person" : "Legal Entity"
 		},
 		components: {
 			//Create,

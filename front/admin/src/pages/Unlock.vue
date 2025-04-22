@@ -8,16 +8,16 @@
 							
 							img.login-logo(src="/assets/images/logo.png")
 							p.welcome-message
-								|Desbloqueo de cuenta
+								|Account Unlock
 
 							p.instructions
-								|Por favor ingresa el correo electrónico de cuenta
+								|Please enter your account email
 
 							v-form(ref="unlockForm", v-on:submit.prevent="")
 								v-text-field(
 									append-icon="mdi-email",
 									v-model="input.username",
-									label="Correo electrónico",
+									label="Email",
 									background-color="transparent",
 									color="primary",
 									:rules="form.validations.email",
@@ -35,14 +35,14 @@
 									block,
 									x-large,
 									@click="sendUnlockEmail")
-									|Confirmar
+									|Confirm
 
 							p.unlock-message.text-center
 								span
 									|
 								span
 									router-link(:to="{path: '/login'}")
-										|&lt; Regresar
+										|&lt; Back
 							copyright
 
 			contact
@@ -66,8 +66,8 @@
 				form: {
 					validations: {
 						email: [
-				        	v => !!v || 'El email es requerido',
-				        	v => /.+@.+\..+/.test(v) || 'El email no es válido',
+				        	v => !!v || 'Email is required',
+				        	v => /.+@.+\..+/.test(v) || 'Email is invalid',
 				      	],
 					}
 				}
@@ -84,14 +84,14 @@
 
 				this.$security.post("send-unlock-email", body)
 				.then(result => {
-					return this.$swal("¡Listo!", "Te hemos enviado un enlace a tu correo electrónico al que deberás ingresar para poder desbloquear tu cuenta.", "success")
+					return this.$swal("Success!", "We have sent a link to your email that you need to access to unlock your account.", "success")
 				})
 				.then(() => {
 					this.$router.push({ path: "/" })
 				})
 				.catch(error => {
 					if( error.response.status == 406 )
-						this.message = "No existe alguna cuenta con el correo solicitado o ya se envió el correo electrónico para realizar el desbloqueo."
+						this.message = "There is no account with the requested email or the unlock email has already been sent."
 					else{
 						console.error( error )
 						this.$sentry.captureException( err )

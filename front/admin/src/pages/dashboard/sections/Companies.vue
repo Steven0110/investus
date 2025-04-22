@@ -1,45 +1,45 @@
 <template lang="pug">
 	.companies-subpanel
 		.subpanel-title.d-none.d-md-block
-			|Catálogo de Empresas
+			|Company Catalog
 		.subpanel-description
-			|En esta sección podrás consultar y administrar el catálogo de empresas de la platafoma
+			|In this section you can view and manage the platform's company catalog
 		.content
 			v-data-table.companies-table(
 				:headers="headers",
 				:items="companies",
-				loading-text="Cargando facturas...",
-				no-result-text="Sin empresas",
-				:footer-props="{'items-per-page-text': 'Mostrar:'}"
-				no-data-text="Sin empresas",
+				loading-text="Loading companies...",
+				no-result-text="No companies",
+				:footer-props="{'items-per-page-text': 'Show:'}"
+				no-data-text="No companies",
 				:loading="status.loading")
 				
-				//template(v-slot:top)
+				template(v-slot:top)
 					v-toolbar(flat)
 						v-spacer
 						v-btn(color="primary", @click="status.show.create = true")
 							v-icon(left)
 								|mdi-plus
-							|Agregar empresa
+							|Add company
 
 				template(v-slot:item._id="{ item }")
 					.actions
 						v-tooltip(bottom, max-width="300px")
 							template(v-slot:activator="{ on, attrs }")
-								v-icon.ml-2(color="primary darken-2", v-bind="attrs", v-on="on", @click="")
+								v-icon.ml-2(color="primary darken-2", v-bind="attrs", v-on="on", @click="viewCompanyDetails(item)")
 									|mdi-eye
 							span
-								|Ver detalle
+								|View details
 
 		//create(v-model="status.show.create", @add="addCompany")
 		//edit(v-model="updateEdit", @update="updateCompany")
 
-		//v-snackbar(v-model="state.infoSnack", color="#176580", dark, bottom)
+		v-snackbar(v-model="state.infoSnack", color="primary", dark, bottom)
 			template(v-slot:action="{ attrs }")
 				v-btn(v-bind="attrs", text)
 					v-icon(color="white")
 						|mdi-check
-			|Cambio hecho exitosamente
+			|Change successfully made
 </template>
 
 <script>
@@ -51,12 +51,12 @@
 			return {
 				companies: [],
 				headers: [
-					{ text: "Nombre", value: "name" },
-					{ text: "Clave", value: "clave" },
-					{ text: "Tipo", value: "tipoAnalisis" },
-					{ text: "Publicación", value: "fechaPublicacion", sortable: false },
+					{ text: "Name", value: "name" },
+					{ text: "Code", value: "clave" },
+					{ text: "Type", value: "tipoAnalisis" },
+					{ text: "Publication Date", value: "fechaPublicacion", sortable: false },
 					{ text: "Rating", value: "type" },
-					{ text: "Acciones", value: "_id", sortable: false },
+					{ text: "Actions", value: "_id", sortable: false },
 				],
 				status: {
 					loading: false,
@@ -73,19 +73,80 @@
 		},
 		methods: {
 			init: function() {
-
-				if( !this.status.loading ){
+				if(!this.status.loading) {
 					this.status.loading = true
-
-					this.$projects.get("companies")
-					.then(result => this.companies = result.data.companies)
-					.catch(err => {
-						this.$swal("Error", "Hubo un error al consultar las empresas disponibles, por favor vuelva a intentarlo.", "warning")
-						this.$report( err )
-					})
-					.finally(() => this.status.loading = false)
+					
+					// Mock data instead of API call
+					setTimeout(() => {
+						this.companies = [
+							{
+								_id: "comp1",
+								name: "Global Investments Ltd",
+								clave: "GIL2023",
+								tipoAnalisis: "Financial",
+								fechaPublicacion: "2023-02-15",
+								type: "AAA+",
+								description: "Global leader in investment management with a strong track record in real estate development financing."
+							},
+							{
+								_id: "comp2",
+								name: "Horizon Development Group",
+								clave: "HDG2022",
+								tipoAnalisis: "Construction",
+								fechaPublicacion: "2022-07-30",
+								type: "AA",
+								description: "Specializes in commercial property development with focus on sustainability and innovation."
+							},
+							{
+								_id: "comp3",
+								name: "Capital Ventures Inc",
+								clave: "CVI2023",
+								tipoAnalisis: "Financial",
+								fechaPublicacion: "2023-04-10",
+								type: "A+",
+								description: "Provides equity and debt financing for mid-size development projects across North America."
+							},
+							{
+								_id: "comp4",
+								name: "Urban Modern Builders",
+								clave: "UMB2021",
+								tipoAnalisis: "Construction",
+								fechaPublicacion: "2021-11-05",
+								type: "AAA",
+								description: "Award-winning construction company specializing in modern urban residential projects."
+							},
+							{
+								_id: "comp5",
+								name: "Evergreen Real Estate Partners",
+								clave: "EREP2022",
+								tipoAnalisis: "Investment",
+								fechaPublicacion: "2022-09-18",
+								type: "AA+",
+								description: "Focuses on sustainable real estate development with strong environmental commitments."
+							},
+							{
+								_id: "comp6",
+								name: "Metropolitan Financing Solutions",
+								clave: "MFS2023",
+								tipoAnalisis: "Financial",
+								fechaPublicacion: "2023-01-22",
+								type: "A",
+								description: "Specializes in structured financing solutions for large-scale urban development projects."
+							},
+							{
+								_id: "comp7",
+								name: "Elite Property Holdings",
+								clave: "EPH2022",
+								tipoAnalisis: "Investment",
+								fechaPublicacion: "2022-12-05",
+								type: "BBB+",
+								description: "Investment group focused on luxury residential and commercial properties."
+							}
+						];
+						
+						this.status.loading = false;
+					}, 1000);
 				}
-
 			},
 			addCompany: function(company) {
 				this.companies.push( company )
@@ -98,34 +159,35 @@
 			},
 			deleteCompany: function(company) {
 				this.$swal({
-					title: `¿Seguro que deseas borrar ${company.name}?`,
-					text: "Esta acción no se puede deshacer",
+					title: `Are you sure you want to delete ${company.name}?`,
+					text: "This action cannot be undone",
 					type: "warning",
-					confirmButtonText: "Sí, borrar",
-					cancelButtonText: "Cancelar",
+					confirmButtonText: "Yes, delete",
+					cancelButtonText: "Cancel",
 					showCancelButton: true,
 					reverseButtons: true
 				})
 				.then(result => {
-					if( result.value ){
+					if(result.value) {
 						this.status.loading = true
-						this.$projects.delete(`companies/${company._id}`)
-						.then(result => {
-							this.companies.splice(this.companies.map(c => c._id).indexOf(company._id), 1)
-							this.$swal("¡Listo!", `La empresa ${company.name} ha sido borrada exitosamente`, "success")
-						})
-						.catch(err => {
-							if( err.response && err.response.status ){
-								if( err.response.status == 404 ){
-									this.$swal("No encontrada", "La empresa no existe.", "error")
-								}else
-									this.$report( err, {swal: true} )
-							}else
-								this.$report( err, {swal: true} )
-						})
-						.finally(() => this.status.loading = false)
+						
+						// Mock API call
+						setTimeout(() => {
+							// Remove company from the array
+							const index = this.companies.findIndex(comp => comp._id === company._id);
+							if (index !== -1) {
+								this.companies.splice(index, 1);
+							}
+							
+							this.$swal("Done!", `The company ${company.name} has been successfully deleted`, "success");
+							this.status.loading = false;
+						}, 1000);
 					}
 				})
+			},
+			viewCompanyDetails: function(company) {
+				// Implement the logic to view company details
+				console.log("Viewing details for:", company);
 			}
 		},
 		mounted: function() {

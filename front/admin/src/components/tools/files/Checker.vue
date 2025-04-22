@@ -38,13 +38,13 @@
 				span
 					|Descargar
 		v-card-title.pr-12.pl-0
-			|{{ $catalog[ doc.type ].name }}
+			|{{ doc.type }}
 		
 		v-btn.score-button(fab, large, v-if="doc.rate != undefined", @click="show.edit = true")
 			|{{ doc.rate }}
 
 		rate(
-			:show="show.rate",
+			:show="true",
 			:doc="doc",
 			:_id="_id",
 			:developer="developer",
@@ -52,7 +52,7 @@
 			@close="show.rate = false")
 
 		edit-rate(
-			:show="show.edit",
+			:show="true",
 			:doc="doc",
 			:_id="_id",
 			:developer="developer",

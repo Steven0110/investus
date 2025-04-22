@@ -17,20 +17,20 @@
 						|{{ $store.getters.currentDeveloper.username }}
 
 					.summary-field
-						|Última sesión:
+						|Last session:
 
 					.summary-value
 						|{{ $store.getters.currentDeveloper.lastSession | moment('MMMM D, h:mm:ss a') }}
 
 					.summary-field
-						|Búsqueda en listas negras:
+						|Search in blacklists:
 
 					blacklist(:result="$store.getters.currentDeveloper.searchResults")
 						
 			v-card-actions
 				v-spacer
 				v-btn(text, color="secondary", @click="$emit('close')")
-					|Cerrar
+					|Close
 </template>
 
 <script>
@@ -42,12 +42,28 @@
 		methods: {
 		},
 		mounted() {
-			if( this.$store.getters.currentProject.developer._id ){
-				/*	Consulta y settea el solicitante */
-				this.$developers.get(`find/${this.$store.getters.currentProject.developer._id}`)
-				.then(result => this.$store.commit("setCurrentDeveloper", result.data.developer))
-				.catch(err => this.$report(err, {swal: true}) )
-			}
+			const mockDeveloper = {
+						_id: this.$store.getters.currentProject.developer._id,
+						name: this.$store.getters.currentProject.developer.name || "ABC Development Corp",
+						username: this.$store.getters.currentProject.developer.email || "info@abcdev.com",
+						profilePicture: null,
+						lastSession: new Date(),
+						searchResults: {
+							status: "completed",
+							pep: false,
+							ofac: false,
+							onu: false,
+							score: 10,
+							scorePercentage: 5
+						},
+						phone: "+1 (555) 123-4567",
+						address: "123 Business St, New York, NY",
+						website: "www.abcdev.com",
+						yearFounded: 2010,
+						projectsCompleted: 15,
+						totalInvestment: 45000000
+					};
+			this.$store.commit("setCurrentDeveloper", mockDeveloper)
 		},
 		activated() {
 			console.log("activated ds")

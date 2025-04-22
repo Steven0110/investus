@@ -8,12 +8,12 @@
 							
 							img.login-logo(src="/assets/images/logo.png")
 							p.welcome-message
-								|Recuperación de cuenta
+								|Account Recovery
 							v-form(ref="forgotForm", v-on:submit.prevent="")
 								v-text-field(
 									append-icon="mdi-email",
 									v-model="forgot.username",
-									label="Correo electrónico de tu cuenta",
+									label="Email of your account",
 									background-color="transparent",
 									color="primary",
 									:rules="form.validations.email",
@@ -31,14 +31,14 @@
 									block,
 									x-large,
 									@click="sendResetMail")
-									|Confirmar
+									|Confirm
 							
 							p.forgot-message.text-center
 								span
 									|
 								span
 									router-link(:to="{path: '/login'}")
-										|&lt; Regresar
+										|&lt; Back
 							copyright
 
 			contact
@@ -62,8 +62,8 @@
 				form: {
 					validations: {
 						email: [
-				        	v => !!v || 'El email es requerido',
-				        	v => /.+@.+\..+/.test(v) || 'El email debe ser válido',
+				        	v => !!v || 'Email is required',
+				        	v => /.+@.+\..+/.test(v) || 'Email must be valid',
 				      	],
 					}
 				}
@@ -83,16 +83,16 @@
 					this.$security.post("send-reset-email", body)
 					.then(result => {
 						this.forgot.username = ""
-						return this.$swal("¡Listo!", "Te hemos enviado un correo electrónico para continuar con el proceso de recuperación de tu cuenta.", "success")
+						return this.$swal("Success!", "We have sent you an email to continue with your account recovery process.", "success")
 					})
 					.then(() => {
 						this.$router.push({ path: "/" })
 					})
 					.catch(err => {
 						if( err.response.status == 401 )
-							this.message = "La cuenta no existe o ya inició el proceso de recuperación"
+							this.message = "The account doesn't exist or the recovery process has already started"
 						else{
-							this.message = "Algo salió mal, por favor vuelve a intentarlo. Si el problema persiste comuníquese a soporte@investus.mx"
+							this.message = "Something went wrong, please try again. If the problem persists, please contact support@investus.mx"
 							this.$sentry.captureException( err )
 						}
 					})

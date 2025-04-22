@@ -1,9 +1,9 @@
 <template lang="pug">
 	.profile-subpanel
 		.subpanel-title.d-none.d-md-block
-			|Mi perfil
+			|My Profile
 		.subpanel-description
-			|En esta sección podrás consultar y modificar información general de tu cuenta
+			|In this section you can view and modify general information about your account
 		.content
 			v-row
 				v-col(md="4", cols="12")
@@ -12,7 +12,7 @@
 				v-col(md="8", cols="12")
 					v-tabs(fixed-tabs, v-model="tabs")
 						v-tab(key="seguridad")
-							|Seguridad
+							|Security
 
 						v-tab-item(key="seguridad")
 </template>
