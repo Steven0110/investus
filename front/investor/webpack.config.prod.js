@@ -7,12 +7,13 @@ const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   mode: 'production',
+  devtool: 'source-map',
   entry: [
     './src/app.js'
   ],
   output: {
     path: path.resolve(__dirname, 'public'),
-    publicPath: './'
+    publicPath: '/front/investor/public/'
   },
   //transpileDependencies: ['vuetify'],
   module: {
