@@ -37,7 +37,7 @@
 							.risk-dot(:style="riskColor")
 			v-card-actions(bottom, absolute)
 				v-spacer
-				v-btn(color="#176580", :to="`/dashboard/project/${project._id}`", dark)
+				v-btn(color="#176580", :to="`/dashboard/proyecto/${project._id}`", dark)
 					|View details
 					v-icon(right)
 						|mdi-chevron-right
