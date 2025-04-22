@@ -12,7 +12,7 @@
 							v-list-item-title
 								|{{$store.getters.user.name}}
 							v-list-item-subtitle
-								|Solicitante
+								|Developer
 					
 					v-divider
 
@@ -22,7 +22,7 @@
 								|mdi-home
 						v-list-item-content
 							v-list-item-title
-								|Inicio
+								|Home
 
 					v-list-item(link, exact, :to="{path: '/dashboard/proyectos'}")
 						v-list-item-icon
@@ -30,7 +30,7 @@
 								|mdi-domain
 						v-list-item-content
 							v-list-item-title
-								|Mis proyectos
+								|My Projects
 
 					v-list-item(link, exact, :to="{path: '/dashboard/documentos'}")
 						v-list-item-icon
@@ -42,32 +42,32 @@
 								v-if="$store.getters.user.pendingDocuments && $store.getters.user.pendingDocuments.length > 0")
 						v-list-item-content
 							v-list-item-title
-								|Documentos
+								|Documents
 
 
 					v-list-group.custom-list-group(prepend-icon="mdi-settings")
 						template(v-slot:activator)
 							v-list-item-content
-								|Ajustes
+								|Settings
 						v-list-item.list-child(link, exact, :to="{path: '/dashboard/perfil'}")
 							v-list-item-content
 								v-list-item-title
-									|Perfil
+									|Profile
 						v-list-item.list-child(link, exact, :to="{path: '/dashboard/autenticacion'}")
 							v-list-item-content
 								v-list-item-title
-									|Autenticación
+									|Authentication
 					v-list-item(link, exact, @click="logout")
 						v-list-item-icon
 							v-icon
 								|mdi-logout
 						v-list-item-content
 							v-list-item-title
-								|Cerrar sesión
+								|Log out
 
 				template(v-slot:append)
 					.last-session(v-if="$store.getters.user.lastSession")
-						|Última sesión: {{ $moment($store.getters.user.lastSession).format("MMMM D, h:mm:ss a") }}
+						|Last session: {{ $moment($store.getters.user.lastSession).format("MMMM D, h:mm:ss a") }}
 
 		//Menú Mobile
 		.mobile.d-block.d-md-none
@@ -80,7 +80,7 @@
 							v-list-item-title
 								|{{$store.getters.user.name}}
 							v-list-item-subtitle
-								|Inversionista
+								|Developer
 
 					v-list-item(link, exact, :to="{path: '/dashboard/'}")
 						v-list-item-icon
@@ -88,7 +88,7 @@
 								|mdi-home
 						v-list-item-content
 							v-list-item-title
-								|Inicio
+								|Home
 
 					v-list-item(link, exact, :to="{path: '/dashboard/proyectos'}")
 						v-list-item-icon
@@ -96,7 +96,7 @@
 								|mdi-domain
 						v-list-item-content
 							v-list-item-title
-								|Mis proyectos
+								|My Projects
 
 					v-list-item(link, exact, :to="{path: '/dashboard/documentos'}")
 						v-list-item-icon
@@ -108,7 +108,7 @@
 								v-if="$store.getters.user.pendingDocuments && $store.getters.user.pendingDocuments.length > 0")
 						v-list-item-content
 							v-list-item-title
-								|Documentos
+								|Documents
 
 
 					v-list-item(link, exact, @click="logout")
@@ -117,12 +117,12 @@
 								|mdi-logout
 						v-list-item-content
 							v-list-item-title
-								|Cerrar sesión
+								|Log out
 
 
 				template(v-slot:append)
 					.last-session(v-if="$store.getters.user.lastSession")
-						|Última sesión: {{ $moment($store.getters.user.lastSession).format("MMMM D, h:mm:ss a") }}
+						|Last session: {{ $moment($store.getters.user.lastSession).format("MMMM D, h:mm:ss a") }}
 </template>
 
 <script>
@@ -145,23 +145,23 @@
 			logout: function() {
 				
 				this.$swal({
-					title: "¿Estás seguro que deseas cerrar tu sesión?",
+					title: "Are you sure you want to log out?",
 					type: "warning",
-					confirmButtonText: "Sí, cerrar sesión.",
-					cancelButtonText: "No, regresar.",
+					confirmButtonText: "Yes, log out.",
+					cancelButtonText: "No, go back.",
 					showLoaderOnConfirm: true,
 					showCancelButton: true,
 					reverseButtons: true,
 					preConfirm: () => {
 						let resource = "logout"
-						return this.$auth.get( resource )
+						return {dismiss: true}
 					}
 				})
 				.then(result => {
 					if(!result.dismiss){
 						this.$store.commit("setSessionActive", false)
 						this.$swal({
-							title: `Sesión cerrada exitosamente.`,
+							title: `Successfully logged out.`,
 							text: "",
 							type: "success",
 							showConfirmButton: false,

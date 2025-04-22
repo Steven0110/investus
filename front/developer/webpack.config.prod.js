@@ -12,7 +12,8 @@ module.exports = {
     './src/app.js'
   ],
   output: {
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/front/developer/public/'
   },
   //transpileDependencies: ['vuetify'],
   module: {

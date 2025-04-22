@@ -1,9 +1,9 @@
 <template lang="pug">
 	.profile-subpanel
 		.subpanel-title.d-none.d-md-block
-			|Mi perfil
+			|My Profile
 		.subpanel-description
-			|En esta sección podrás consultar y modificar información general de tu cuenta
+			|In this section you can view and modify general information about your account
 		.content
 			v-row
 				v-col(md="4", cols="12")
@@ -14,9 +14,9 @@
 						v-tab(key="fiscal")
 							|Fiscal
 						v-tab(key="seguridad")
-							|Seguridad
+							|Security
 						v-tab(key="manifiesto", v-if="!$store.getters.user.agreed")
-							|Manifiesto
+							|Manifest
 
 						v-tab-item(key="fiscal")
 							fiscal

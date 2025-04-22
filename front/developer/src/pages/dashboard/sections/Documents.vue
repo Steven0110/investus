@@ -1,9 +1,9 @@
 <template lang="pug">
 	.documents-subpanel
 		.subpanel-title.d-none.d-md-block
-			|Documentos
+			|Documents
 		.subpanel-description
-			|En esta sección puedes subir los documentos que te sean solicitados para poder invertir en Investus.
+			|In this section you can upload the documents that are requested in order to invest in Investus.
 		.main-documents
 			v-row(v-if="documents.length > 0")
 				v-col(md="3", v-for="doc in documents", :key="doc.type")
@@ -16,7 +16,7 @@
 						v-flex
 							v-img.mx-auto.mt-5(src="/assets/icons/documents-ok.png", :width="imageWidth")
 							.done-documents.text-center
-								|Por ahora no tienes nada pendiente por subir, cuando se requiera subir algún documento te notificaremos.
+								|You don't have any pending documents to upload at the moment. We'll notify you when a document needs to be uploaded.
 </template>
 
 <script>
@@ -52,11 +52,11 @@
 				console.log( doc )
 
 				if( doc.type == "ine_anverso" || doc.type == "ine_reverso"){
-					this.$swal("¡Listo!", "El documento ha sido subido correctamente. Actualmente se encuentra siendo procesado para su validación, recibirás una notificación cuando haya terminado.", "success")
+					this.$swal("Done!", "The document has been uploaded successfully. It's currently being processed for validation, you'll receive a notification when it's finished.", "success")
 					doc.status = "processing"
 				}else{
 					doc.status = "uploaded"
-					this.$swal("¡Listo!", "El documento ha sido subido correctamente", "success")
+					this.$swal("Done!", "The document has been uploaded successfully", "success")
 				}
 			}
 		},

@@ -12,74 +12,6 @@
 			project-card-loader(:show="status.loading")
 
 			v-row(v-if="!status.loading")
-
-				//v-col(cols="12", md="4")
-					v-hover
-						template(v-slot:default="{ hover }")
-							.image-video-container
-								.project-main-video(v-if="videoId")
-									youtube(:video-id="videoId", :player-vars="{autoplay: 0}", height="400")
-								.project-main-image(v-else)
-									v-img.white-background(:src="project.mainImage", max-height="400", lazy-src="/assets/images/image-loader.jpg")
-										template(v-slot:placeholder)
-											v-row.fill-height.ma-0(align="center", justify="center")
-												v-progress-circular(indeterminate, color="grey lighten-5")
-								v-fade-transition
-									v-overlay( v-if="hover", absolute, color="#ba7127")
-										v-btn(color="primary", @click="status.show.imageVideoEditor = true")
-											|Cambiar imagen o video
-
-				//v-col.main-metrics(cols="12", md="5")
-					v-row
-						v-col.pb-0(cols="12")
-							goal-slider(:value="project.progress", :totalInvested="project.totalInvested", :goal="project.goal")
-						v-col(cols="12", md="6")
-							single-metric(:value="15", text="Inversionistas")
-							single-metric(:value="66", text="días restantes")
-							single-metric(:value="project.roi + '%'", text="de retorno de inversión")
-						v-col(cols="12", md="6")
-							risk-level(:risk="project.risk")
-						v-col(cols="12")
-							.project-actions
-								v-btn(color="primary", block, large)
-									|Editar información
-									v-icon(right)
-										|mdi-pencil
-									
-				//v-col.project-carousel(cols="12")
-					slider-gallery(:images="project.gallery")
-				
-				//v-col(cols="12", md="4", offset-md="4")
-					v-btn(block, color="primary")
-						|Editar galería
-						v-icon(right)
-							|mdi-pencil
-
-
-				//v-col.pb-0(cols="12")
-					.project-content
-						
-						v-tabs(v-model="tab", color="#B05900")
-							v-tab(key="description")
-								|Descripción
-							v-tab(key="documents")
-								|Documentación
-								v-badge(
-									color="#FC8B19",
-									dot)
-							v-tab(key="observations")
-								|Observaciones
-								v-badge(
-									color="#FC8B19",
-									dot)
-
-						v-tabs-items(v-model="tab")
-							v-tab-item(key="description")
-								description(v-model="project.description", @updated="status.show.snackbar = true", v-if="project.description != null")
-							v-tab-item(key="documents")
-								documents(:pendingDocuments="project.pendingDocuments")
-							v-tab-item(key="observations")
-								observations
 				
 				v-col.pb-0(cols="12")
 					project-publisher(
@@ -90,7 +22,7 @@
 					v-row
 						v-spacer
 						v-btn(color="primary", @click="review", x-large, :disabled="!isReady", v-if="$store.getters.currentProject.status != 'revision'")
-							|Enviar a revisión
+							|Send for review
 							v-icon(color="white", right)
 								|mdi-folder-search-outline
 						v-spacer
@@ -101,10 +33,10 @@
 			@close="status.show.titleEditor = false")
 
 		v-snackbar(v-model="status.show.snackbar")
-			|Proyecto actualizado correctamente
+			|Project updated successfully
 			template(v-slot:action="{ attrs }")
 				v-btn(color="#ba7127", text, v-bind="attrs", @click="status.show.snackbar = false")
-					|Cerrar
+					|Close
 
 </template>
 
@@ -132,6 +64,222 @@
 						imageVideoEditor: true,
 					}
 				},
+				mockProjects: {
+					"proj1": {
+						_id: "proj1",
+						title: "Urban Living Tower",
+						description: "Modern apartment complex with co-working spaces in downtown area. This state-of-the-art building offers residential units with smart home technology, common areas with co-working spaces, rooftop garden, fitness center, and 24/7 security services.",
+						mainImage: "/assets/images/estate.jpg",
+						status: "waiting",
+						progress: 68,
+						goal: 2500000,
+						totalInvested: 1700000,
+						roi: 12.5,
+						risk: "medium",
+						investors: 24,
+						daysRemaining: 45,
+						createdAt: new Date("2023-10-15"),
+						location: "Downtown",
+						type: "Residential",
+						gallery: [
+							"/assets/images/estate.jpg",
+							"/assets/images/estate2.png",
+							"/assets/images/project-default.png"
+						],
+						updates: [
+							{
+								title: "Construction Progress Update",
+								date: "2024-02-15",
+								content: "Foundation work completed. Starting structural framework next week."
+							},
+							{
+								title: "Project Timeline",
+								date: "2024-01-10",
+								content: "Project on track for completion by end of year. All permits approved."
+							}
+						],
+						pendingDocuments: [
+							{
+								name: "Business Plan",
+								path: "/assets/images/helper01.jpg",
+								required: true,
+								type: "pdf"
+							},
+							{
+								name: "Financial Projections",
+								path: null,
+								required: true,
+								type: "excel"
+							},
+							{
+								name: "Construction Permits",
+								path: "/assets/images/helper02.jpg",
+								required: true,
+								type: "pdf"
+							}
+						],
+						stage: "documentacion"
+					},
+					"proj2": {
+						_id: "proj2",
+						title: "Commercial Plaza Centre",
+						description: "Multi-purpose commercial building with retail spaces and offices. The Commercial Plaza Centre is strategically located in the financial district, offering premium office spaces and retail locations.",
+						mainImage: "/assets/images/estate2.png",
+						status: "revision",
+						progress: 30,
+						goal: 4200000,
+						totalInvested: 1260000,
+						roi: 14.2,
+						risk: "medium-high",
+						investors: 18,
+						daysRemaining: 87,
+						createdAt: new Date("2023-12-03"),
+						location: "Financial District",
+						type: "Commercial",
+						gallery: [
+							"/assets/images/estate2.png",
+							"/assets/images/estate.jpg",
+							"/assets/images/project-default.png"
+						],
+						updates: [
+							{
+								title: "Design Changes Approved",
+								date: "2024-02-20",
+								content: "Final design approved by city planning department. Construction to begin in March."
+							}
+						],
+						pendingDocuments: [
+							{
+								name: "Business Plan",
+								path: "/assets/images/helper01.jpg",
+								required: true,
+								type: "pdf"
+							},
+							{
+								name: "Financial Projections",
+								path: "/assets/images/helper02.jpg",
+								required: true,
+								type: "excel"
+							},
+							{
+								name: "Construction Permits",
+								path: "/assets/images/helper01.jpg",
+								required: true,
+								type: "pdf"
+							}
+						],
+						stage: "evaluacion",
+						workers: []
+					},
+					"proj3": {
+						_id: "proj3",
+						title: "Green View Residences",
+						description: "Eco-friendly residential development with solar panels and green spaces. Green View Residences is designed with sustainability in mind.",
+						mainImage: "/assets/images/project-default.png",
+						status: "pending",
+						progress: 0,
+						goal: 1800000,
+						totalInvested: 0,
+						roi: 10.8,
+						risk: "low",
+						investors: 0,
+						daysRemaining: 120,
+						createdAt: new Date("2024-01-20"),
+						location: "Suburbs",
+						type: "Residential",
+						gallery: [
+							"/assets/images/project-default.png"
+						],
+						updates: [],
+						pendingDocuments: [
+							{
+								name: "Business Plan",
+								path: null,
+								required: true,
+								type: "pdf"
+							},
+							{
+								name: "Financial Projections",
+								path: null,
+								required: true,
+								type: "excel"
+							},
+							{
+								name: "Construction Permits",
+								path: null,
+								required: true,
+								type: "pdf"
+							}
+						],
+						stage: "montos"
+					},
+					"proj4": {
+						_id: "proj4",
+						title: "Tech Innovation Hub",
+						description: "Modern office space designed for technology startups and innovation. The Tech Innovation Hub provides flexible office spaces specifically designed for technology startups.",
+						mainImage: "/assets/images/estate.jpg",
+						status: "completed",
+						progress: 100,
+						goal: 3000000,
+						totalInvested: 3000000,
+						roi: 15.5,
+						risk: "medium",
+						investors: 32,
+						daysRemaining: 0,
+						createdAt: new Date("2023-05-10"),
+						location: "Tech District",
+						type: "Commercial",
+						gallery: [
+							"/assets/images/estate.jpg",
+							"/assets/images/estate2.png"
+						],
+						updates: [
+							{
+								title: "Project Completed",
+								date: "2024-01-25",
+								content: "All construction completed. Building fully occupied with 95% of office spaces leased."
+							},
+							{
+								title: "First Dividend Payment",
+								date: "2023-12-15",
+								content: "First quarterly dividend payment of 3.8% distributed to all investors."
+							},
+							{
+								title: "Grand Opening",
+								date: "2023-11-01",
+								content: "Official grand opening ceremony with city officials and local business leaders."
+							}
+						],
+						pendingDocuments: [
+							{
+								name: "Business Plan",
+								path: "/assets/images/helper01.jpg",
+								required: true,
+								type: "pdf"
+							},
+							{
+								name: "Financial Projections",
+								path: "/assets/images/helper02.jpg",
+								required: true,
+								type: "excel"
+							},
+							{
+								name: "Construction Permits",
+								path: "/assets/images/helper01.jpg",
+								required: true,
+								type: "pdf"
+							}
+						],
+						stage: "evaluacion",
+						workers: [
+							{
+								name: "John Smith",
+								position: "Project Manager",
+								email: "john@example.com"
+							}
+						]
+					}
+				}
 			}
 		},
 		methods: {
@@ -139,12 +287,25 @@
 				this.status.loading = true
 				let id = this.$route.params.id
 
-				this.$projects.get(`find/${id}`)
-				.then(result => {
-					this.$wait(500, () => this.$store.commit("setCurrentProject", result.data.project) )
-				})
-				.catch(err => this.$report(err, {swal: true}) )
-				.finally(() => this.status.loading = false)
+				// Simulate API call with mock data
+				setTimeout(() => {
+					// Check if we have this project in mock data
+					const mockProject = this.mockProjects[id]
+					
+					if (mockProject) {
+						// If project exists in mock data, use it
+						this.$wait(500, () => {
+							this.$store.commit("setCurrentProject", mockProject)
+							this.status.loading = false
+						})
+					} else {
+						// If project doesn't exist, use a default one
+						this.$wait(500, () => {
+							this.$store.commit("setCurrentProject", this.mockProjects["proj1"])
+							this.status.loading = false
+						})
+					}
+				}, 1000)
 			},
 			update: function( opt ) {
 				this.$store.commit("setProjectData", opt )
@@ -153,33 +314,31 @@
 			review: function() {
 				
 				if(this.$store.getters.currentProject.stage == "evaluacion" && this.$store.getters.currentProject.workers.length == 0){
-					this.$swal("Sin personal agregado", "Es necesario agregar al menos la información sobre un líder de proyecto", "warning")
+					this.$swal("No staff added", "You need to add at least one project leader's information", "warning")
 				}else if(this.$store.getters.currentProject.stage == "montos"){
 					this.$swal({
-						title: "¿Estás seguro que deseas enviar tu proyecto a revisión?",
-						text: "Este es el último paso para la revisión de tu proyecto, assegúrate de que la información esté correcta y completa.",
+						title: "Are you sure you want to send your project for review?",
+						text: "This is the final step for your project review, make sure the information is correct and complete.",
 						type: "warning",
-						confirmButtonText: "Sí, enviar.",
-						cancelButtonText: "No, regresar.",
+						confirmButtonText: "Yes, send it.",
+						cancelButtonText: "No, go back.",
 						showLoaderOnConfirm: true,
 						showCancelButton: true,
 						reverseButtons: true,
 						preConfirm: () => {
-							const resource = `project/${this.$route.params.id}/review`
-							const body = {
-								goal: {
-									amount: this.$store.getters.currentProject.goal
-								},
-								title: this.$store.getters.currentProject.title
-							}
-							return this.$projects.post( resource, body )
+							// Mock API call
+							return new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ data: { success: true } })
+								}, 1500)
+							})
 						}
 					})
 					.then(result => {
 						if(!result.dismiss){
 							this.$swal({
-								title: `El proyecto ha sido enviado a revisión exitosamente.`,
-								text: "Te notificaremos cuando el proceso haya sido terminado",
+								title: `The project has been successfully sent for review.`,
+								text: "We'll notify you when the process is complete",
 								type: "success",
 								showConfirmButton: false,
 								timer: 3000,
@@ -192,27 +351,28 @@
 					.catch(err => this.$report(err, {swal: true}) )
 				}else{
 					this.$swal({
-						title: "¿Estás seguro que deseas enviarlo a revisión?",
-						text: "Investus revisará el proyecto y dictaminará los documentos que has subido. Durante este proceso no podrás realizar modificaciones al proyecto.",
+						title: "Are you sure you want to send it for review?",
+						text: "Investus will review the project and evaluate the documents you've uploaded. During this process, you won't be able to make changes to the project.",
 						type: "warning",
-						confirmButtonText: "Sí, enviar.",
-						cancelButtonText: "No, regresar.",
+						confirmButtonText: "Yes, send it.",
+						cancelButtonText: "No, go back.",
 						showLoaderOnConfirm: true,
 						showCancelButton: true,
 						reverseButtons: true,
 						preConfirm: () => {
-							const resource = `project/${this.$route.params.id}/review`
-							const body = {
-								title: this.$store.getters.currentProject.title
-							}
-							return this.$projects.post( resource, body )
+							// Mock API call
+							return new Promise(resolve => {
+								setTimeout(() => {
+									resolve({ data: { success: true } })
+								}, 1500)
+							})
 						}
 					})
 					.then(result => {
 						if(!result.dismiss){
 							this.$swal({
-								title: `El proyecto ha sido enviado a revisión exitosamente.`,
-								text: "Te notificaremos cuando el proceso haya sido terminado",
+								title: `The project has been successfully sent for review.`,
+								text: "We'll notify you when the process is complete",
 								type: "success",
 								showConfirmButton: false,
 								timer: 3000,
@@ -248,51 +408,18 @@
 					return false
 			},
 			isReady: function() {
-				if( this.$store.getters.currentProject && this.$store.getters.currentProject.documents ){
-					/*	Revisa que todos los documentos habilitados se hayan subido 	*/
-					
-					if( this.$store.getters.currentProject.stage == "montos" )
-						return this.$store.getters.currentProject.estates.length > 0 && this.$store.getters.currentProject.goal > 0
+				/* Check that all enabled documents have been uploaded */
+				if( this.$store.getters.currentProject.pendingDocuments ){
+					for( let i = 0 ; i < this.$store.getters.currentProject.pendingDocuments.length ; i++ ){
+						if( this.$store.getters.currentProject.pendingDocuments[ i ].required &&
+							!this.$store.getters.currentProject.pendingDocuments[ i ].path )
+							return false;
+					}
+				}
 
-					for(let doc of this.$store.getters.currentProject.documents)
-						if( doc.status != "uploaded" )
-							return false // Termina la ejecución de la función
-
-					// Si el código continúa aquí significa que todos los documentos han sido subidos
-					return true
-				}else
-					return false
-			},
-			viabilidadDocs: function() {
-				let documents = this.$store.getters.currentProject.documents || [] //array
-				let filtered = documents
-				.filter(doc => {
-					return ["escritura_propiedad", "posesion_material", "escritura_propiedad_colateral", "certificado_libertad_gravamen", "extincion_expropiacion"].includes(doc.type)
-				})
-				.filter(doc => doc.status != "uploaded" )
-
-				return filtered
-			},
-			evaluacionDocs: function() {
-				let documents = this.$store.getters.currentProject.documents || [] //array
-				let filtered = documents
-				.filter(doc => {
-					return ["plan_negocios", "estudio_mercado", "estudio_viabilidad", "estado_resultados", "estado_resultados", "estado_flujos", "balance_general", "reporte_credito"].includes(doc.type)
-				})
-				.filter(doc => doc.status != "uploaded" )
-				
-				return filtered
-			},
-			montosDocs: function() {
-				let documents = this.$store.getters.currentProject.documents || [] //array
-				let filtered = documents
-				.filter(doc => {
-					return ["null"].includes(doc.type)
-				})
-				.filter(doc => doc.status != "uploaded" )
-				
-				return filtered
-			},
+				// If the code continues here, it means all documents have been uploaded
+				return this.$store.getters.currentProject && this.$store.getters.currentProject.status
+			}
 		},
 		activated(){
 			this.load()

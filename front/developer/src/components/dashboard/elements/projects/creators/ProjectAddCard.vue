@@ -7,7 +7,7 @@
 						v-icon(x-large, color="#999")
 							|mdi-plus
 					p.mb-0.middle-container-text
-						|Agregar proyecto
+						|Add Project
 		project-type-chooser(:show="status.show.projectCreator", @close="status.show.projectCreator = false")
 </template>
 

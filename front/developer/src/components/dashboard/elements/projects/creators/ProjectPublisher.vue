@@ -8,25 +8,25 @@
 					:complete="isViabilityCompleted",
 					complete-icon="mdi-check",
 					edit-icon="mdi-check")
-					|Viabilidad Legal o Jurídica
+					|Legal Viability
 				v-divider
 				v-stepper-step(
 					:editable="!isEvaluacionCompleted",
 					step="2",
 					v-show="isViabilityCompleted"
 					:complete="isEvaluacionCompleted")
-					|Evaluación Cuantitativa y Cualitativa
+					|Quantitative and Qualitative Evaluation
 				v-divider
 				v-stepper-step(
 					editable,
 					v-show="isEvaluacionCompleted",
 					step="3")
-					|Montos de financiamiento y Garantía Inmobiliaria
+					|Financing Amounts and Real Estate Guarantee
 			v-stepper-items
 				v-stepper-content.elevation-0(step="1")
 					.step-header
 						.description.mb-2
-							|Sube los documentos solicitados por las Disposiciones de carácter general a las que se refiere el artículo 58 de la LRITF.
+							|Upload the documents required by the General Provisions referred to in article 58 of the LRITF.
 					.step-subcontent
 						v-row.documents(v-if="viabilidadDocs.length > 0")
 							v-col(md="3", v-for="doc in viabilidadDocs", :key="doc.type")
@@ -38,7 +38,7 @@
 				v-stepper-content.elevation-0(step="2")
 					.step-header(v-if="evaluacionDocs.length > 0")
 						.description
-							|Sube los documentos solicitados por las Disposiciones de Carácter General Aplicables a las Instituciones de Tecnología Financiera.
+							|Upload the documents required by the General Provisions Applicable to Financial Technology Institutions.
 					.step-subcontent
 						v-row.documents(v-if="evaluacionDocs.length > 0")
 							v-col(md="3", v-for="doc in evaluacionDocs", :key="doc.type")
@@ -51,20 +51,20 @@
 						v-row
 							v-col(cols="12")
 								h3.text-center
-									|Líder de proyecto y personal de la primera línea jerárquica:
+									|Project Leader and First Line Staff:
 						transition-group(name="slide-x-transition", class="row" tag="div", mode="out-in")
-							v-col(cols="12", sm="6", md="4", xl="3", v-for="(worker, index) in $store.getters.currentProject.workers", :key="worker.name")
+							v-col(cols="12", sm="6", md="4", xl="3", v-for="(worker, index) in mockWorkers", :key="worker.name")
 								worker-card(:worker="worker", :index="index")
 							v-col.pb-10(cols="12", sm="6", md="4", xl="3", key="-1")
 								worker-add-card(@add="addWorker")
 
 				v-stepper-content.elevation-0(step="3")
 					.step-subcontent
-						financiamiento(v-model="cobertura", v-if="$store.getters.currentProject.stage == 'montos'")
+						financiamiento(v-model="cobertura", v-if="$store.getters.currentProject && $store.getters.currentProject.stage == 'montos'")
 		v-card(v-else)
 			v-card-text
 				v-alert.text-center(color="success", dark, icon="mdi-check")
-					|Por el momento no tienes documentos documentos o informacion pendientes por subir.
+					|You currently have no pending documents or information to upload.
 
 </template>
 
@@ -83,35 +83,108 @@
 						createEstate: false
 					}
 				},
-				cobertura: 0
+				cobertura: 0,
+				mockDocuments: [
+					{
+						name: "Legal Entity Registration",
+						type: "legal_registration",
+						status: "uploaded",
+						processed: true,
+						valid: true,
+						stage: "viabilidad",
+						path: "/assets/images/helper01.jpg"
+					},
+					{
+						name: "Tax Registration Certificate",
+						type: "tax_certificate",
+						status: null,
+						processed: false,
+						valid: false,
+						stage: "viabilidad",
+						path: null
+					},
+					{
+						name: "Business Operating License",
+						type: "business_license",
+						status: "uploaded",
+						processed: true,
+						valid: true,
+						stage: "viabilidad",
+						path: "/assets/images/helper02.jpg"
+					},
+					{
+						name: "Financial Statements",
+						type: "financial_statements",
+						status: "uploaded",
+						processed: true,
+						valid: false,
+						stage: "evaluacion",
+						path: "/assets/images/helper01.jpg"
+					},
+					{
+						name: "Market Analysis",
+						type: "market_analysis",
+						description: "Market Analysis",
+						status: null,
+						processed: false,
+						valid: false,
+						stage: "evaluacion",
+						helper: {
+							title: "Market Analysis document",
+							footer: "This document is required to evaluate the market analysis of the project.",
+						},
+						path: null
+					},
+					{
+						name: "Project Timeline",
+						type: "project_timeline",
+						status: null,
+						processed: false,
+						valid: false,
+						stage: "evaluacion",
+						path: null
+					}
+				],
+				mockWorkers: [
+					{
+						name: "John Smith",
+						position: "Project Manager",
+						email: "john.smith@example.com",
+						phone: "555-123-4567"
+					},
+					{
+						name: "Maria Rodriguez",
+						position: "Financial Analyst",
+						email: "maria.rodriguez@example.com",
+						phone: "555-987-6543"
+					}
+				]
 			}
 		},
 		methods: {
 			uploadedDocument: function( doc ){
 				doc.status = "uploaded"
 				doc.processing = true
-				this.$swal("¡Listo!", "El documento ha sido subido correctamente. En este momento está siendo procesado para comprobar su validez.", "success")
+				this.$swal("Success!", "The document has been uploaded successfully. It is now being processed to verify its validity.", "success")
 
-				/*	Revisa que todos los documentos pendientes se hayan subido 	*/
-				for(let doc of this.$store.getters.currentProject.documents)
+				/*	Check if all pending documents have been uploaded 	*/
+				for(let doc of this.mockDocuments)
 					if( doc.status != "uploaded" )
-						return true // Termina la ejecución de la función
+						return true // End function execution
 
-				// Si el código continúa aquí significa que todos los documentos han sido subidos
+				// If code continues here, it means all documents have been uploaded
 				this.$emit("ready")
 				
 			},
 			addWorker: function( worker ) {
+				this.mockWorkers.push(worker)
 				this.$emit("newWorker", worker)
 			},
 		},
 		computed: {
 			pendingDocs: function() {
-				if(this.$store.getters.currentProject && this.$store.getters.currentProject.documents ){
-					return this.$store.getters.currentProject.documents.filter(doc => !doc.status || (doc.processed && !doc.valid))
-				}else
-					return []
-
+				// Use mockDocuments instead of store data for demo
+				return this.mockDocuments.filter(doc => !doc.status || (doc.processed && !doc.valid))
 			},
 			viabilidadDocs: function() {
 				let documents = this.pendingDocs //array
@@ -126,48 +199,32 @@
 				return filtered
 			},
 			isViabilityCompleted: function() {
-				for(let doc of this.viabilidadDocs)
-					if( !doc.processed || !doc.valid )
+				// Check if all viability documents are processed and valid
+				const viabilityDocs = this.mockDocuments.filter(doc => doc.stage == 'viabilidad')
+				for(let doc of viabilityDocs)
+					if(!doc.processed || !doc.valid)
 						return false
 				return true
 			},	
 			isEvaluacionCompleted: function() {
-				return this.$store.getters.currentProject.stage == "montos"
+				// For demo purposes, we'll make this return true to show all steps
+				return true
 			},		
 			isReady: function() {
-				let ready = true
-				if( this.$store.getters.currentProject && this.$store.getters.currentProject.documents ){
-					
-					/*	Revisa que todos los documentos habilitados se hayan subido 	*/
-					if(this.$store.getters.currentProject.stage == 'evaluacion')
-						ready = false
-					else
-						for(let doc of this.$store.getters.currentProject.documents){
-							if( doc.status != "uploaded" )
-								ready = false // Termina la ejecución de la función
-						}
-
-				}else
-					ready = false
-
-				return ready
+				// For demo purposes, we'll make this return false to show the stepper
+				return false
 			},
 		},
 		mounted(){
-			this.renovateSession()
-			
-			/*	Set step 	*/
-			switch( this.$store.getters.currentProject.stage ){
-				case "viabilidad":
-					this.step = 1
-					break
-				case "evaluacion":
-					this.step = 2
-					break
-				case "montos":
-					this.step = 3
-					break
+			// Mock setting data that would normally come from the store
+			if(this.$store && this.$store.getters && !this.$store.getters.currentProject) {
+				// If store exists but no current project, we could mock it here
+				// This is just a safety check for demo purposes
 			}
+			
+			/*	Set step based on mock data	*/
+			// For demo purposes, let's start at step 2
+			this.step = 2
 		},
 		components: {
 			Uploader,
@@ -180,5 +237,12 @@
 
 <style lang="sass">
 	.project-publisher
-	
+		.step-header
+			margin-bottom: 20px
+			.description
+				font-size: 16px
+				color: #555
+		.step-subcontent
+			padding: 10px
+			
 </style>

@@ -7,23 +7,23 @@
 						.register-panel
 							img.login-logo(src="/assets/images/logo.png")
 							p.welcome-message
-								|Crea tu cuenta de solicitante
+								|Create your developer account
 							p.login-message
 								span
-									|¿Ya tienes una cuenta?
+									|Already have an account?
 								span
 									router-link(:to="{path: '/login'}")
-										|Inicia sesión
+										|Log in
 							v-form(ref="registerForm", v-on:submit.prevent="")
 								v-radio-group(v-model="register.type", row)
 									v-spacer
-									v-radio(label="Persona Física", value="fisica")
-									v-radio(label="Persona Moral", value="moral")
+									v-radio(label="Individual", value="fisica")
+									v-radio(label="Business", value="moral")
 									v-spacer
 								v-text-field(
 									append-icon="mdi-account",
 									v-model="register.name",
-									label="Nombre completo",
+									label="Full name",
 									color="#176580",
 									background-color="transparent",
 									:rules="form.validations.name",
@@ -33,7 +33,7 @@
 								v-text-field(
 									append-icon="mdi-email",
 									v-model="register.username",
-									label="Correo electrónico",
+									label="Email",
 									color="#176580",
 									background-color="transparent",
 									:rules="form.validations.email",
@@ -51,39 +51,39 @@
 											v-icon(color="red", left, v-else)
 												|mdi-close-circle
 											span
-												|Contiene al menos una #[strong letra minúscula]
+												|Contains at least one #[strong lowercase letter]
 										.uppercase-validation
 											v-icon(color="green", left, v-if="passwordChecker.uppercase")
 												|mdi-check-circle
 											v-icon(color="red", left, v-else)
 												|mdi-close-circle
 											span
-												|Contiene al menos una #[strong letra mayúscula]
+												|Contains at least one #[strong uppercase letter]
 										.number-validation
 											v-icon(color="green", left, v-if="passwordChecker.number")
 												|mdi-check-circle
 											v-icon(color="red", left, v-else)
 												|mdi-close-circle
 											span
-												|Contiene al menos un #[strong número]
+												|Contains at least one #[strong number]
 										.special-validation
 											v-icon(color="green", left, v-if="passwordChecker.special")
 												|mdi-check-circle
 											v-icon(color="red", left, v-else)
 												|mdi-close-circle
 											span
-												|Contiene al menos un #[strong carácter especial] (!@#$%^&amp;?_+-=)
+												|Contains at least one #[strong special character] (!@#$%^&amp;?_+-=)
 										.length-validation
 											v-icon(color="green", left, v-if="passwordChecker.length")
 												|mdi-check-circle
 											v-icon(color="red", left, v-else)
 												|mdi-close-circle
 											span
-												|Tiene al menos #[strong 8 carácteres de longitud]
+												|Has at least #[strong 8 characters in length]
 								v-text-field(
 									append-icon="mdi-lock",
 									v-model="register.password",
-									label="Contraseña",
+									label="Password",
 									:rules="form.validations.password",
 									outlined,
 									dense,
@@ -97,7 +97,7 @@
 								v-text-field(
 									append-icon="mdi-lock",
 									v-model="register.rpassword",
-									label="Repeetir contraseña",
+									label="Repeat password",
 									:rules="form.validations.password",
 									color="#176580",
 									outlined,
@@ -109,15 +109,15 @@
 
 								p.accept-terms
 									span
-										|Al dar click en <strong>Registrar</strong> aceptas nuestros
+										|By clicking on <strong>Register</strong> you accept our
 									span
 										router-link(:to="{path: '/register'}")
-											|Términos de uso 
+											|Terms of Use 
 									span
-										|y 
+										|and 
 									span
 										router-link(:to="{path: '/register'}")
-											|Política de privacidad
+											|Privacy Policy
 
 								v-alert(color="warning", transition="scale-transition", v-show="error")
 									|{{ error }}
@@ -129,7 +129,7 @@
 									block,
 									x-large,
 									@click="submitRegister")
-									|Registrar
+									|Register
 
 							.copyright
 								p
@@ -137,12 +137,12 @@
 								p
 									span
 										router-link(:to="{path: '/'}")
-											|Términos de uso 
+											|Terms of Use 
 									span
 										|/ 
 									span
 										router-link(:to="{path: '/'}")
-											|Política de privacidad
+											|Privacy Policy
 
 			.contact.d-none.d-md-block
 				.social-networks
@@ -186,16 +186,16 @@
 				form: {
 					validations: {
 						email: [
-				        	v => !!v || 'El email es requerido',
-				        	v => /.+@.+\..+/.test(v) || 'El email no es válido',
+				        	v => !!v || 'Email is required',
+				        	v => /.+@.+\..+/.test(v) || 'Email is invalid',
 				      	],
 				      	password: [
-				        	v => !!v || 'La contraseña es requerida',
-				        	v => this.register.password === this.register.rpassword || 'Las contraseñas no coinciden',
-				        	v => /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[A-Za-z\d*.!@#$%^&\(\)\{\}\[\]\:\;\,\.\?\/\~\_\+\-\=\|\\])[A-Za-z\d*.!@#$%^&\(\)\{\}\[\]\:\;\,\.\?\/\~\_\+\-\=\|\\]{8,}/g.test(this.register.password) || "La contraseña no tiene el formato requerido"
+				        	v => !!v || 'Password is required',
+				        	v => this.register.password === this.register.rpassword || 'Passwords do not match',
+				        	v => /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[A-Za-z\d*.!@#$%^&\(\)\{\}\[\]\:\;\,\.\?\/\~\_\+\-\=\|\\])[A-Za-z\d*.!@#$%^&\(\)\{\}\[\]\:\;\,\.\?\/\~\_\+\-\=\|\\]{8,}/g.test(this.register.password) || "Password format is incorrect"
 				      	],
 				      	name: [
-				        	v => !!v || 'Tu nombre es requerido',
+				        	v => !!v || 'Your name is required',
 				      	]
 					}
 				}
@@ -245,8 +245,8 @@
 					this.$auth.post(url, body)
 					.then( response => {
 						this.$swal({
-							title: "¡Listo!",
-							text: "Tu cuenta ha sido creada exitosamente. Te hemos enviado un correo electrónico para poder verificar tu cuenta.",
+							title: "Done!",
+							text: "Your account has been created successfully. We have sent you an email to verify your account.",
 							type: "success",
 							confirmButtonText: "Ok"
 						})
@@ -259,7 +259,7 @@
 					.catch( error => {
 						if( error ){ //Not intercepted
 							if( error.response.status == 406 ){
-								this.error = "Ya existe una cuenta con ese correo electrónico."
+								this.error = "An account with this email already exists."
 							}else
 								this.$swal("Unknown error", JSON.stringify( error ), "warning")
 						}

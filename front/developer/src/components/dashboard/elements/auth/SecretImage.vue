@@ -3,24 +3,24 @@
 		v-card
 			v-img(src="/assets/images/secret-image.jpg", :height="imgHeight")
 			v-card-title
-				|Imagen secreta
+				|Secret Image
 			v-card-subtitle(v-if="!$store.getters.user.secretImage")
-				|Configura una imagen secreta para que puedas iniciar sesión con mayor seguridad.
+				|Set up a secret image for more secure login.
 				v-tooltip(top, max-width="500")
 					template(v-slot:activator="{ on, attrs }")
 						v-icon(right, color="black", v-on="on")
 							|mdi-help-circle
 					div
 						p
-							|La imagen de seguridad que escojas se te mostrará al iniciar sesión para que tengas la seguridad de estar ingresando tus credenciales de acceso en Investus
+							|The security image you choose will be shown when you log in to ensure you're entering your credentials on Investus
 			v-card-subtitle(v-else)
-				|La imagen secreta ya fue configurada exitosamente.
+				|Secret image has been successfully configured.
 			v-card-actions
 				v-spacer
 				v-btn(color="primary", dark, v-if="!$store.getters.user.secretImage", @click="showConfig = true", :loading="status.sending")
-					|Configurar
+					|Configure
 				v-btn(color="green", dark, v-else)
-					|Configurado
+					|Configured
 					v-icon(right)
 						|mdi-check
 
@@ -28,18 +28,18 @@
 		v-dialog(v-model="showConfig", max-width="1200", persistent, scrollable)
 			v-card.secret-image-card
 				v-card-title
-					|Configuración de imagen secreta
+					|Secret Image Configuration
 				v-card-text
 					.instructions
-						|Por favor seleccione una de las siguientes imágenes:
+						|Please select one of the following images:
 					.secret-images-container
 						image-radio-group(v-model="secretImage", :images="images")
 				v-card-actions
 					v-spacer
 					v-btn(text, color="primary", @click="showConfig = false")
-						|Cerrar
+						|Close
 					v-btn(color="primary", @click="saveSecretImage", :loading="status.saving")
-						|Guardar
+						|Save
 </template>
 
 <script>
@@ -102,12 +102,12 @@
 
 
 				this.$swal({
-					title: "¿Estás seguro?",
-					text: "Una vez configurada la imagen secreta no se podrá modificar",
+					title: "Are you sure?",
+					text: "Once the secret image is configured, it cannot be changed",
 					type: "warning",
 					showCancelButton: true,
-					cancelButtonText: "Regresar",
-					confirmButtonText: "Guardar",
+					cancelButtonText: "Go back",
+					confirmButtonText: "Save",
 					reverseButtons: true
 				})
 				.then(result => {
@@ -123,12 +123,12 @@
 						
 						this.$security.post("set-secret-image", body)
 						.then(result => {
-							this.$swal("¡Listo!", "Tu imagen secreta ha sido configurada correctamente. La podrás visualizar la próxima vez que inicies sesión", "success")
+							this.$swal("Done!", "Your secret image has been successfully configured. You'll see it the next time you log in", "success")
 						})
 						.catch(err => {
 							console.error( err )
 							this.$sentry.captureException( err )
-							this.$swal("No se pudo configurar tu imagen secreta", "Por favor vuelve a intentarlo", "warning")
+							this.$swal("Could not configure your secret image", "Please try again", "warning")
 						})
 						.finally( () => {
 							this.renovateSession()

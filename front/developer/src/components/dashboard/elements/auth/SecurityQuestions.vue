@@ -3,49 +3,49 @@
 		v-card
 			v-img(src="/assets/images/question.jpg", :height="imgHeight")
 			v-card-title
-				|Preguntas de seguridad
+				|Security Questions
 				v-tooltip(top, max-width="500")
 					template(v-slot:activator="{ on, attrs }")
 						v-icon(right, color="black", v-on="on")
 							|mdi-help-circle
 					div
 						p
-							|Las preguntas de seguridad sirven para restaurar tu cuenta o tu contraseña.
+							|Security questions help restore your account or password.
 						p
-							|Si deseas reestablecer tu contraseña, se te solicitará responder una de tus preguntas de seguridad, y posteriormente la pregunta será eliminada.
+							|If you need to reset your password, you'll be asked to answer one of your security questions, and then the question will be removed.
 						p
-							|Si tu cuenta resulta bloqueada por haber hecho 3 intentos fallidos de inicio de sesión podrás desbloquearla respondiendo una pregunta de seguridad, y posteriormente la pregunta será eliminada.
+							|If your account is locked due to 3 failed login attempts, you can unlock it by answering a security question, and then the question will be removed.
 						p
-							|Una vez que no tengas preguntas de seguridad restantes pdorás volver a configurarlas.
+							|Once you have no remaining security questions, you can set them up again.
 			v-card-subtitle
-				|Configura tus preguntas de seguridad en caso de requerir recuperar tu contraseña.
+				|Set up your security questions in case you need to recover your password.
 			v-card-actions
 				v-spacer
 				v-btn(color="#176580", dark, v-if="$store.getters.user.securityQuestions == 0", @click="showConfig = true")
-					|Configurar preguntas
+					|Configure Questions
 				v-btn(color="green", dark, v-else)
-					|Preguntas configuradas
+					|Questions Configured
 					v-icon(right)
 						|mdi-check
 
 		v-dialog(v-model="showConfig", max-width="700", persistent)
 			v-card.security-questions-card()
 				v-card-title.mb-5
-					|Configuración de preguntas de seguridad
+					|Security Questions Configuration
 				v-card-text
 					v-form(ref="securityQuestionsForm")
 						v-row.question(v-for="(q, index) in questions", :key="q.id", align="center", justify="center")
 							v-col.pb-0.pt-0(md="6", cols="12")
 								v-text-field(
 									v-model="q.question",
-									label="Pregunta secreta",
+									label="Secret Question",
 									:rules="form.validations.required",
-									placeholder="v.g. Nombre de mi primer mascota",
+									placeholder="e.g. Name of my first pet",
 									name="Question name")
 							v-col.pb-0.pt-0(md="5", cols="10")
 								v-text-field(
 									v-model="q.answer",
-									label="Respuesta de la pregunta",
+									label="Question Answer",
 									:rules="form.validations.required",
 									name="Question answer")
 							v-col.pb-0.pt-0(md="1", cols="2")
@@ -56,19 +56,19 @@
 					.d-flex
 						v-spacer
 						v-btn(text, color="blue", @click="addQuestion")
-							|Agregar pregunta +
+							|Add Question +
 						v-spacer
 					.d-flex
 						v-spacer
 						v-alert.text-center(color="orange", ref="questionsAlert", :value="false", dismissible)
-							|Necesitas agregar al menos 2 preguntas de seguridad
+							|You need to add at least 2 security questions
 						v-spacer
 				v-card-actions
 					v-spacer
 					v-btn(text, color="primary", @click="showConfig = false")
-						|Cerrar
+						|Close
 					v-btn(color="primary", @click="saveQuestions")
-						|Guardar
+						|Save
 </template>
 
 <script>
@@ -81,7 +81,7 @@
 				form: {
 					validations: {
 						required: [
-				        	v => !!v || 'Este campo es requerido',
+				        	v => !!v || 'This field is required',
 				      	],
 					}
 				}
@@ -106,11 +106,11 @@
 						this.$refs.questionsAlert.toggle()
 					else{
 						this.$swal({
-							title: "¿Seguro que estás serán tus preguntas de seguridad?",
-							text: "No podrás volver a configurarlas hasta que ya no tengas preguntas disponibles",
+							title: "Are you sure these will be your security questions?",
+							text: "You won't be able to configure them again until you have no questions left",
 							type: "warning",
-							confirmButtonText: "Sí, guardar",
-							cancelButtonText: "Regresar",
+							confirmButtonText: "Yes, save them",
+							cancelButtonText: "Go back",
 							showCancelButton: true,
 							reverseButtons: true,
 							showLoaderOnConfirm: true,
@@ -126,11 +126,11 @@
 									this.showConfig = false
 
 
-									return this.$swal("¡Listo!", "Las preguntas de seguridad han sido configuradas correctamente", "success")
+									return this.$swal("Done!", "Security questions have been configured correctly", "success")
 								})
 								.catch( error => {
 									//this.$sentry.captureException( error )
-									this.$swal("Álgo salió mal", "Por favor vuelve a intentarlo", "error")
+									this.$swal("Something went wrong", "Please try again", "error")
 								})
 							}
 						})
