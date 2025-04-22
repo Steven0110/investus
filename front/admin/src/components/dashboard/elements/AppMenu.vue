@@ -155,8 +155,7 @@
 					showCancelButton: true,
 					reverseButtons: true,
 					preConfirm: () => {
-						let resource = "logout"
-						return this.$auth.get( resource )
+						return {dismiss: true}
 					}
 				})
 				.then(result => {

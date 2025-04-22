@@ -103,8 +103,7 @@
 				this.$refs.menu.toggle()
 			},
 			logout: function() {
-				let resource = "logout"
-				return this.$auth.get( resource )
+				return true
 			}
 		},
 		created(){
